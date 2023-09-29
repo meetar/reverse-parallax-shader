@@ -79,7 +79,7 @@ export function App() {
 
   <div style={{height: '100%', zIndex: 0, }}>
 
-    <Canvas camera={{ position: [5, 3, -10], target: [0, -1, 0], zoom: 3, near: 1, far: 1000 }} >
+    <Canvas camera={{ position: [5, 3, -10], target: [0, -1, 0], zoom: 5, near: 1, far: 1000 }} >
 
     <Center>
       {/* put everything into a component inside Canvas, to avoid the R3F Hooks warning - this provides the Canvas context */}
