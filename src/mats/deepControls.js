@@ -1,5 +1,5 @@
 export const deepControls = {
-  samples: { value: 6, min: 1, max: 64, step: 1 },
+  samples: { value: 20, min: 10, max: 64, step: 1 },
   transmission: { value: 1, min: .98, max: 1, step: 0.01 },
   thickness: { value: .1, min: 0, max: 1, step: 0.01 },
   chromaticAberration: { value: .2, min: 0, max: 1, step: 0.01 },
