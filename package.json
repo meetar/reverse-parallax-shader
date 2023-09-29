@@ -1,5 +1,5 @@
 {
-  "name": "reverse-parallax",
+  "name": "reverse-parallax-shader",
   "version": "1.0.0",
   "description": "A demo of a reverse parallax shader.",
   "homepage": ".",
@@ -18,8 +18,7 @@
     "react-device-detect": "^2.2.3",
     "react-dom": "18.2.0",
     "react-scripts": "5.0.1",
-    "three": "^0.151.3",
-    "typeit-react": "^2.6.4"
+    "three": "^0.151.3"
   },
   "scripts": {
     "start": "GENERATE_SOURCEMAP=true react-scripts start",
