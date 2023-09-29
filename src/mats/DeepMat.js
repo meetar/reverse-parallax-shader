@@ -7,6 +7,7 @@ import ParallaxMaterial from './ParallaxMaterial';
 import { parallaxcontrols } from './parallaxcontrols';
 import { randomizeLevaControls, simpleControls, roundValue, roundToNearest } from '../utils'
 import { deepControls } from './deepControls';
+import { Center, Resize } from '@react-three/drei';
 
 // a material with inner depths
 export default function DeepMat({trigger, config, color, geometry, normalMap, depthMap, envMap, texture, ...props}) {
@@ -56,6 +57,7 @@ export default function DeepMat({trigger, config, color, geometry, normalMap, de
 
   return (
     <>
+      <Center position={[0, .5, 0]}>
       <mesh scale={1} renderOrder={2} geometry={geometry} transparent={true} castShadow >
         <MeshTransmissionMaterial {...parallaxConfig} {...deepConfig} {...config}
           color={color}
@@ -76,6 +78,7 @@ export default function DeepMat({trigger, config, color, geometry, normalMap, de
           transparent={true}
           />
         </mesh>
+        </Center>
     </>
   )
 }

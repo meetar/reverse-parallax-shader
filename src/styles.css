@@ -29,175 +29,30 @@ body,
 body {
   overscroll-behavior-y: none;
   color: black;
-  background-color: grey;
+  background: linear-gradient(to bottom, rgb(81, 79, 83), rgb(1, 2, 17));
 }
 
-#curtain, #bg, #bgNightmode {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  visibility: visible;
-}
-
-#curtain {
-  opacity: 1;
-  z-index: 2;
-  background-color: black;
-  transition: opacity 1s ease;
-}
-
-#bg {
-  background: linear-gradient(to bottom, #FFA500, #FF6347);
-  transition: background-color 1s ease;
-  opacity: 1;
-  z-index: 0;
-  transition: opacity 1s ease;
-}
-#bg.nightmode {
-  opacity: 0;
-  transition: opacity 1s ease;
-}
-#bgNightmode  {
-  /* opacity: 0; */
-  background: linear-gradient(to bottom, #0e010e, #0d091d);
-  opacity: 1;
-  z-index: 0;
-  /* transition: opacity 1s ease; */
-}
-#bgNightmode.nightmode  {
-  /* z-index: 0; */
-}
-
-#curtain {
-  z-index: 2
-}
-
-#bg {
-  z-index: 0
-}
-
-.interface {
-  position: absolute;
-  /* height: 100%; */
-  z-index: 3;
-  margin: 3% 0px;
-  width: 100%;
-  text-align: center;
-  align-content: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  /* border: var(--border-width) solid red; */
-}
-
-.top {
-  margin: 0;
-  top : 0px;
-  z-index: 3;
-}
 .bottom {
+  position: absolute;
   bottom : 0px;
   z-index: 3;
   width: 100%;
-  height: 25vh;
-  background: rgba(256, 256, 256, 0.8);
-  border-top: var(--border-width) solid var(--border-color);
-  border-bottom: var(--border-width) solid var(--border-color);
-  transition: background 1s ease;
-}
-.bottom.nightmode {
-  background: rgba(64, 64, 64, 0.8);
-}
-
-
-#moon, #info {
-  position: absolute;
-  top: 0px;
-  margin: 1%;
-  width: 50px;
-  height: 50px;
-  font-size: 30px;
-  border: var(--border-width) solid var(--border-color);
-  border-radius: 2px;;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #aaa;
-  cursor: pointer;
-}
-
-#moon:hover, #info:hover, #continue:hover {
-  scale: 110%;
-}
-
-.nightmode #moon, .nightmode #info {
-  background-color: #666;
-}
-#moon {
-  left: 0px;
-}
-
-#info {
-  right: 0px;
-}
-
-#infoscreen {
-  position: absolute;
-  top: 0;
-  display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  width: 100%;
-  height: 100%; /* Optional: Makes the container full height of the viewport */
-  background: rgba(0, 0, 0, .7);
-  z-index: 10;
-}
-
-#infocontent {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  /* height: 50%; */
-  z-index: 5;
-  width: 85%;
-  max-width: 600px;
-  font-size: 24px;
-  font-family: Calibri, 'Trebuchet MS', sans-serif;
-  background-color: lightgray;
-  text-align: center;
-  padding: 8%;
-  box-shadow: 4px 4px 10px black;
-  border: var(--border-width) solid var(--border-color)
-}
-
-.nightmode #infocontent {
   color: white;
-  background-color: #333;
-}
-#infoscreen.nightmode a {
-  color: rgb(158, 95, 158);
-}
-
-.colored-div {
-  background-color: #3498db;
-  width: 200px;
-  height: 150px;
-  z-index: 10;
+  padding: 20px;
+  align-items: center;
+  text-align: center;
+  font-family: sans-serif;
+  color: white;
+  scale: 100% 150%;
+  font-weight: bold;
 }
 
-@media only screen and (max-width: 767px) {
-  #infocontent {
-    font-size: 18px;
-  }
+a {
+  text-decoration: none;
+  color: white;
 }
 
-.gpu {
-  z-index: 10;
-  font-family: 'Courier New', Courier, monospace;
-  background-color: #333;
-  color: greenyellow
+.drop {
+  position: relative;
+  top: 1px;
 }

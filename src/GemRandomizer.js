@@ -5,22 +5,21 @@ import { useLoader } from '@react-three/fiber'
 import { useControls } from 'leva'
 import { RGBELoader } from 'three-stdlib'
 import { EquirectangularReflectionMapping } from 'three';
-import { Center } from '@react-three/drei'
 import * as _ from 'lodash'
-import { DiamondMaterial } from './mats/DiamondMaterial'
-import CrystalMaterial from './mats/CrystalMaterial'
 import DeepMat from './mats/DeepMat'
-import { Rock } from './mats/Rock'
 import { getModel } from './getModel'
-import { getDescription } from './getDescription.js'
 import { randomBetween } from './utils';
 import { randomColor } from 'randomcolor';
 import { randomDepth, randomNormal, randomEnv } from './textureUtils'
 
-export function GemRandomizer({ gpuTier, config, trigger, setText, gemDone, slow }) {
+// flip a coin with a n * 100 percent chance of success
+export function roll(chance = .5) {
+  return Math.random() < chance;
+}
+
+export function GemRandomizer({ gpuTier, config, trigger, gemDone }) {
   const [mode, setMode] = useState('gem');
   const [statecolor, setColor] = useState('#000000');
-  const [desc, setDescription] = useState('');
   const [model, setModel] = useState()
   const [normalMap, setNormalMap] = useState()
   const [depthMap, setDepthMap] = useState()
@@ -44,23 +43,9 @@ export function GemRandomizer({ gpuTier, config, trigger, setText, gemDone, slow
   }, [statecolor])
 
   async function newMode() {
-    let mode = await getMode(slow);
+    let mode = await getMode();
     // console.log('mode?', mode);
     setMode(mode)
-  }
-
-  // assign a new material
-  useEffect(() => {
-    // console.log('slow gem, re-matting');
-    if (slow) {
-      newMode()
-    }
-}, [slow])
-
-
-  async function fetchDescription(v) {
-    const desc = await getDescription(v)
-    return desc;
   }
 
   async function getNormal() {
@@ -100,51 +85,33 @@ export function GemRandomizer({ gpuTier, config, trigger, setText, gemDone, slow
     return randomColor()
   }
 
-  async function getMode(slow) {
+  async function getMode() {
     if (gpuTier.tier == 0) {
       return 'basic'
     }
-    if (gpuTier.tier == 1 || slow) {
+    if (gpuTier.tier == 1) {
       return _.sample(['crystal', 'deep', 'deep'])
     }
-    // return 'gem';
     return _.sample(['gem', 'crystal', 'deep', 'deep'])
   }
 
   async function randomizeAll(mode = null, oldmodel = null) {
-    // console.log('RANDOMIZE ALL', mode, oldmodel);
-
     // use Promise.all so we don't set any state before we have all the info at once –
     // this prevents the model from being drawn multiple times with incomplete data every time one of the state values updates
-    let model, normal, depth, description;
+    let model, normal, depth;
     const newcolor = randomColor();
-    if (mode && oldmodel) {
-      [normal, depth, description] = await Promise.all([getNormal(), getDepth(), fetchDescription(newcolor)]);
-      setModel(oldmodel)
-    }
-    else if (mode) {
-      [model, normal, depth, description] = await Promise.all([getModel(slow), getNormal(), getDepth(), fetchDescription(newcolor)]);
-      setModel(model)
-    }
-    else {
-      [model, normal, depth, description, mode] = await Promise.all([getModel(slow), getNormal(), getDepth(), fetchDescription(newcolor), getMode(slow)]);
-      setModel(model)
-    }
-    // console.log('mode:', mode, description);
+    [model, normal, depth, mode] = await Promise.all([getModel(), getNormal(), getDepth(), getMode()]);
+    setModel(model)
+    // console.log('mode:', mode);
     setNormalMap(normal)
     setDepthMap(depth)
     // setEnvMap(env) // not worth the trouble
     setMode(mode)
     setColor(newcolor)
-    setDescription(description)
     // trigger material to reload if there's already a mode set
     setMattrigger(Math.random())
     gemDone()
   }
-
-  useEffect(() => {
-    setText(desc)
-  }, [desc])
 
     // watch for triggers from app
   useEffect(() => {
@@ -152,7 +119,7 @@ export function GemRandomizer({ gpuTier, config, trigger, setText, gemDone, slow
       trigger = trigger[0];
       if (trigger == 'shape') {
         (async function () {
-          const model = await getModel(slow);
+          const model = await getModel();
           setModel(model)
         })()
       }
@@ -184,9 +151,7 @@ export function GemRandomizer({ gpuTier, config, trigger, setText, gemDone, slow
 
         (async function () {
           const color = await getColor();
-          const desc = await fetchDescription(color);
-            setColor(color)
-            setText(desc)
+          setColor(color)
           })()
         } catch (e) {
           console.log(e);
@@ -214,25 +179,9 @@ export function GemRandomizer({ gpuTier, config, trigger, setText, gemDone, slow
 return ( mode &&
     <>
 
-      { mode == 'gem' ? (
-        <DiamondMaterial gpu={gpuTier} slow={slow} trigger={mattrigger} config={config} color={statecolor} normalMap={normalMap} envMap={envMap} geometry={model} castShadow />
-      ) : mode == 'crystal' ? (
-        <mesh geometry={model} castShadow >
-          <CrystalMaterial trigger={mattrigger} normalMap={normalMap} color={statecolor} geometry={model} envMap={envMap} config={config} />
-        </mesh>
-      ) : mode == 'deep' ? (
-        <DeepMat trigger={mattrigger} geometry={model} color={statecolor} normalMap={normalMap} depthMap={depthMap} envMap={envMap} config={config} castShadow />
-      ) : (
-        // fallback
-        <mesh geometry={model}>
-          <meshStandardMaterial normalMap={normalMap} {...config} color={statecolor} />
-        </mesh>
-      )}
+      <directionalLight position={[0, .5, 0]} intensity={1} penumbra={1} distance={2} color={'white'} />
+      <DeepMat trigger={mattrigger} geometry={model} color={statecolor} normalMap={normalMap} depthMap={depthMap} envMap={envMap} config={config} castShadow />
 
-      <directionalLight position={[0, .5, 0]} intensity={1} penumbra={1} distance={2} color={statecolor} />
-      <Center bottom position={[0, .5, 0]}>
-        <Rock receiveShadow />
-      </Center>
     </>
   )
 }
